@@ -12,5 +12,6 @@ namespace GymManagementDAL.Entities
         public int Capacity { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+
     }
 }
