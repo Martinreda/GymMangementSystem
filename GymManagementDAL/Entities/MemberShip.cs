@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementDAL.Entities
 {
-    internal class MemberShip : BaseEntity 
+    public class MemberShip : BaseEntity 
     {
         //start date - CreatedAt of Baseclass
         public DateTime EndDate { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementDAL.Entities
 {
-    internal class MemberSession :BaseEntity
+    public class MemberSession :BaseEntity
     {
         // BookingDate -- use CreatedAt Of Base Entity
         public int MemberId { get; set; }

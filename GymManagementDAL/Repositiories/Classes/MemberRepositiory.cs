@@ -11,7 +11,16 @@ namespace GymManagementDAL.Repositiories.Classes
 {
     internal class MemberRepositiory : IMemberRepositiory
     {
-        private readonly GymDbContext _dbContext = new GymDbContext();
+        private readonly GymDbContext _dbContext;
+
+        //Ask CLR To Inject Object From GymDbContext 
+        //DbContext Object Is Injected , Not Created Manually
+
+        //private readonly GymDbContext _dbContext = new GymDbContext();
+        public MemberRepositiory (GymDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
         public int Add(Member member)
         {
             _dbContext.Members.Add(member);
