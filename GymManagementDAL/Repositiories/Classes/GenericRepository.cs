@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManagementDAL.Repositiories.Classes
 {
-    internal class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity, new()
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity, new()
     {
         private readonly GymDbContext _dbContext;
 

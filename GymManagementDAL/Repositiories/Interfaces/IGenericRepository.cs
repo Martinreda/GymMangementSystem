@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GymManagementDAL.Repositiories.Interfaces
 {
-    internal interface IGenericRepository<TEntity> where TEntity : BaseEntity , new()
+    public interface IGenericRepository<TEntity> where TEntity : BaseEntity , new()
     {
         TEntity? GetById(int Id);
         IEnumerable<TEntity> GetALl();
