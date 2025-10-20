@@ -21,6 +21,54 @@ namespace GymManagmentBSL.Services.Classes
         {
             _memberRepository = memberRepository;
         }
+
+        public bool CreateMember(CreateMemberViewModel createMember)
+        {
+            try
+            {
+                //Check phone is exit or not
+                var phoneExists = _memberRepository.GetALl(X => X.Phone == createMember.Phone).Any();
+
+                //Check email is exit or not
+                var emilExists = _memberRepository.GetALl(X => X.Email == createMember.Email).Any();
+
+                //if one exists return false
+                if (phoneExists || emilExists) return false;
+
+                // If not add member and return true if added 
+                var member = new Member()
+                {
+                    Name = createMember.Name,
+                    Email = createMember.Email,
+                    Phone = createMember.Phone,
+                    Gender = createMember.Gender,
+                    DateOfBirth = createMember.DateOfBirth,
+                    Address = new Address()
+                    {
+                        BulidingNumber = createMember.BuildingNumber,
+                        City = createMember.City,
+                        Street = createMember.Street,
+                    },
+
+                    HealthRecord = new HealthRecord()
+                    {
+                        Weight = createMember.HealthRecordViewModel.Weight,
+                        Height = createMember.HealthRecordViewModel.Height,
+                        BloodType = createMember.HealthRecordViewModel.BloodType,
+                        Note = createMember.HealthRecordViewModel.Note,
+
+                    }
+                };
+
+                return _memberRepository.Add(member) > 0;
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public IEnumerable<MemberViewModel> GetAllMembers()
         {
             var Members = _memberRepository.GetALl();
