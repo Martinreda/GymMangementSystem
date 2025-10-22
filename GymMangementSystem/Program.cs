@@ -22,6 +22,7 @@ namespace GymMangementSystem
             }
             );
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IPlanRepository, PlanRepository>();
             //builder.Services.AddScoped<ITrainerRepositories, TrainerRepository>();
             var app = builder.Build();
 
