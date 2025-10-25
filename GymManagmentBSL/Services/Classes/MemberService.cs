@@ -16,17 +16,20 @@ namespace GymManagmentBSL.Services.Classes
         private readonly IGenericRepository<Member> _memberRepository;
         private readonly IGenericRepository<MemberShip> _membershipRepository;
         private readonly IPlanRepository _planRepository;
+        private readonly IGenericRepository<HealthRecord> _healthRecordRepository;
 
         //Ask Clr For Creaeting oblect from service 
         // builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); 
         // Clr Will inject Adderss of object in CTOr
         public MemberService(IGenericRepository<Member> memberRepository ,
             IGenericRepository<MemberShip> membershipRepository , 
-             IPlanRepository planRepository )
+             IPlanRepository planRepository , 
+             IGenericRepository<HealthRecord> healthRecordRepository)
         {
             _memberRepository = memberRepository;
             _membershipRepository = membershipRepository;
             _planRepository = planRepository;
+            _healthRecordRepository = healthRecordRepository;
         }
 
         public bool CreateMember(CreateMemberViewModel createMember)
@@ -143,6 +146,20 @@ namespace GymManagmentBSL.Services.Classes
             }
             return ViewModel;
 
+        }
+
+        public HealthRecordViewModel? GetMemberHealthRecordDetails(int MemberId)
+        {
+            var MemberHealthRecord = _healthRecordRepository.GetById(MemberId);
+            if (MemberHealthRecord is null) return null;
+
+            return new HealthRecordViewModel()
+            {
+                BloodType = MemberHealthRecord.BloodType,
+                Height = MemberHealthRecord.Height,
+                Note = MemberHealthRecord.Note,
+                Weight = MemberHealthRecord.Weight,
+            };
         }
     }
 }
