@@ -36,14 +36,15 @@ namespace GymManagmentBSL.Services.Classes
         {
             try
             {
-                //Check phone is exit or not
-                var phoneExists = _memberRepository.GetALl(X => X.Phone == createMember.Phone).Any();
+                ////Check phone is exit or not
+                //var phoneExists = _memberRepository.GetALl(X => X.Phone == createMember.Phone).Any();
 
-                //Check email is exit or not
-                var emilExists = _memberRepository.GetALl(X => X.Email == createMember.Email).Any();
+                ////Check email is exit or not
+                //var emilExists = _memberRepository.GetALl(X => X.Email == createMember.Email).Any();
 
                 //if one exists return false
-                if (phoneExists || emilExists) return false;
+                if (IsEmailExists (createMember.Email) || IsPhoneExists (createMember.Phone)) 
+                    return false;
 
                 // If not add member and return true if added 
                 var member = new Member()
@@ -161,5 +162,68 @@ namespace GymManagmentBSL.Services.Classes
                 Weight = MemberHealthRecord.Weight,
             };
         }
+
+        public MemberToUpdateViewModel? GetMemberToUpdate(int MemberId)
+        {
+            var Member = _memberRepository.GetById(MemberId);
+            if (Member is null) return null;
+            return new MemberToUpdateViewModel()
+            {
+                  Email = Member.Email,
+                  Name = Member.Name,
+                  Phone = Member.Phone,
+                  Photo = Member.Photo,
+                  BuildingNumber = Member.Address.BulidingNumber,
+                  City = Member.Address.City,
+                  Street = Member.Address.Street,
+            };
+        }
+
+        public bool UpdateMemberDetails(int Id, MemberToUpdateViewModel UpdatedMember)
+        {
+            try
+            {
+                //var EmailExists = _memberRepository.GetALl(X => X.Email == UpdatedMember.Email).Any();
+                //var PhoneExists = _memberRepository.GetALl(X => X.Phone == UpdatedMember.Phone).Any();
+                // No Duplcation -======= Clean code 
+
+                if (IsEmailExists (UpdatedMember.Email) || IsPhoneExists (UpdatedMember.Phone))
+                    return false;
+
+                var member = _memberRepository.GetById(Id);
+                if (member == null)
+                    return false;
+
+                member.Email = UpdatedMember.Email;
+                member.Phone = UpdatedMember.Phone;
+
+                member.Address.BulidingNumber = UpdatedMember.BuildingNumber;
+                member.Address.City = UpdatedMember.City;
+                member.Address.Street = UpdatedMember.Street;
+
+                member.UpdatedAt = DateTime.Now;
+
+                return _memberRepository.Update(member) > 0;
+
+
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #region Helper Methods 
+
+        private bool IsEmailExists (string email)
+        {
+            return _memberRepository.GetALl(X => X.Email == email).Any(); 
+        }
+        private bool IsPhoneExists(string phone)
+        {
+            return _memberRepository.GetALl(X => X.Phone == phone).Any();
+        }
+
+        #endregion
     }
 }
