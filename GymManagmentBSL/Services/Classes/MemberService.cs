@@ -17,6 +17,7 @@ namespace GymManagmentBSL.Services.Classes
         private readonly IGenericRepository<MemberShip> _membershipRepository;
         private readonly IPlanRepository _planRepository;
         private readonly IGenericRepository<HealthRecord> _healthRecordRepository;
+        private readonly IGenericRepository<MemberSession> _memberSessionRepository;
 
         //Ask Clr For Creaeting oblect from service 
         // builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>)); 
@@ -24,12 +25,14 @@ namespace GymManagmentBSL.Services.Classes
         public MemberService(IGenericRepository<Member> memberRepository ,
             IGenericRepository<MemberShip> membershipRepository , 
              IPlanRepository planRepository , 
-             IGenericRepository<HealthRecord> healthRecordRepository)
+             IGenericRepository<HealthRecord> healthRecordRepository,
+             IGenericRepository<MemberSession>memberSessionRepository )
         {
             _memberRepository = memberRepository;
             _membershipRepository = membershipRepository;
             _planRepository = planRepository;
             _healthRecordRepository = healthRecordRepository;
+            _memberSessionRepository = memberSessionRepository;
         }
 
         public bool CreateMember(CreateMemberViewModel createMember)
@@ -177,6 +180,33 @@ namespace GymManagmentBSL.Services.Classes
                   City = Member.Address.City,
                   Street = Member.Address.Street,
             };
+        }
+
+        public bool RemoveMember(int MemberId)
+        {
+            var Member = _memberRepository.GetById(MemberId);
+            if (Member is null) return false;
+
+            var HasActiveMemberSessions = _memberSessionRepository
+                .GetALl(X => X.MemberId == MemberId && X.session.StartDate > DateTime.Now).Any();
+            if (HasActiveMemberSessions) return false;
+
+            var MemberShips = _membershipRepository.GetALl(X => X.MemberId == MemberId);
+            try
+            {
+                if (MemberShips.Any ())
+                {
+                    foreach (var membership in MemberShips)
+                    {
+                        _membershipRepository.Delete(membership);
+                    }
+                }
+             return   _memberRepository.Delete(Member) > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public bool UpdateMemberDetails(int Id, MemberToUpdateViewModel UpdatedMember)
