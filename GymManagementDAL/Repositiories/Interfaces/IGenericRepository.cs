@@ -11,8 +11,8 @@ namespace GymManagementDAL.Repositiories.Interfaces
     {
         TEntity? GetById(int Id);
         IEnumerable<TEntity> GetALl(Func<TEntity , bool>Condtion = null);
-        int Add(TEntity entity);
-        int Update(TEntity entity);
-        int Delete(TEntity entity);
+        void Add(TEntity entity);
+        void Update(TEntity entity);
+        void Delete(TEntity entity);
     }
 }
