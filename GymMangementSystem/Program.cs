@@ -1,4 +1,5 @@
 using GymManagementDAL.Data.Contexts;
+using GymManagementDAL.Data.DataSeed;
 using GymManagementDAL.Repositiories.Classes;
 using GymManagementDAL.Repositiories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,18 @@ namespace GymMangementSystem
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             //builder.Services.AddScoped<ITrainerRepositories, TrainerRepository>();
             var app = builder.Build();
+
+
+
+
+            #region Migrate Database -- Data Seeding 
+            var Scope = app.Services.CreateScope();
+            var dbContext = Scope.ServiceProvider.GetRequiredService<GymDbContext>();
+            var PendingMigrations = dbContext.Database.GetPendingMigrations();
+            if (PendingMigrations?.Any() ?? false)
+                dbContext.Database.Migrate(); 
+            GymDbContextSeeding.SeedData(dbContext);
+            #endregion 
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
