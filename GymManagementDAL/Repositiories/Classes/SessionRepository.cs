@@ -31,5 +31,13 @@ namespace GymManagementDAL.Repositiories.Classes
         {
             return _dbContext.MemberSessions.Count(X => X.SessionId == sessionId);
         }
+
+        public Session? GeTSessionWithTrainerAndCategory(int SessionId)
+        {
+            return _dbContext.Sessions
+                     .Include(navigationPropertyPath: X => X.SessionTrainer)
+                     .Include(navigationPropertyPath: X => X.SessionCategory)
+                     .FirstOrDefault(predicate: X => X.Id == SessionId);
+        }
     }
 }

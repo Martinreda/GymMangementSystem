@@ -2,6 +2,7 @@ using GymManagementDAL.Data.Contexts;
 using GymManagementDAL.Data.DataSeed;
 using GymManagementDAL.Repositiories.Classes;
 using GymManagementDAL.Repositiories.Interfaces;
+using GymManagmentBSL;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymMangementSystem
@@ -25,6 +26,7 @@ namespace GymMangementSystem
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+            builder.Services.AddAutoMapper(X=> X.AddProfile(new MappingProfiles()));
             //builder.Services.AddScoped<ITrainerRepositories, TrainerRepository>();
             var app = builder.Build();
 
