@@ -21,6 +21,7 @@ namespace GymManagmentBSL
             .ForMember(destinationMember: dest => dest.AvailableSlots, Options => Options.Ignore());
 
             CreateMap<CreateSessionViewModel, Session>();
+            CreateMap<Session, UpdateSessionViewModel>().ReverseMap();
 
 
         }
