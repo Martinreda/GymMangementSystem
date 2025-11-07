@@ -40,26 +40,30 @@ namespace GymMangementSystem
             if (PendingMigrations?.Any() ?? false)
                 dbContext.Database.Migrate(); 
             GymDbContextSeeding.SeedData(dbContext);
-            #endregion 
+            #endregion
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                // ... possibly production-only error handling middleware ...
             }
 
             app.UseHttpsRedirection();
             app.UseRouting();
-
             app.UseAuthorization();
+            app.MapStaticAssets(); // Non-standard method, likely a custom helper or an older/renamed method
 
-            app.MapStaticAssets();
+            // Custom Route 1: Trainers
+            app.MapControllerRoute(
+                name: "Trainers",
+                pattern: "coach/{action}",
+                defaults: new { controller = "Trainer" , action = "Index" });
+
+            // Standard Default Route 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+            // WithStaticAssets() is non-standard/likely custom
 
             app.Run();
         }
