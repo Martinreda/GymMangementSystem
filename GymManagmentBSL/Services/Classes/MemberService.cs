@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentBSL.Services.Classes
 {
-    internal class MemberService : IMemberService
+    public class MemberService : IMemberService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

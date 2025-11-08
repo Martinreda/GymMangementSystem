@@ -1,6 +1,7 @@
 ﻿@using GymManagmentBSL.ViewModels.AnalyticsViewModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model AnalyticsViewModel
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,9 +13,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@400..800&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
           rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
     <title>Power fitness | Home</title>
 
     <style>
@@ -73,27 +74,27 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                               asp-controller="Members" asp-action="Index">Members</a>
+                               asp-controller="Member" asp-action="Index">Members</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                               asp-controller="Trainers" asp-action="Index">Trainers</a>
+                               asp-controller="Trainer" asp-action="Index">Trainers</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                               asp-controller="Sessions" asp-action="Index">Sessions</a>
+                               asp-controller="Session" asp-action="Index">Sessions</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                               asp-controller="Plans" asp-action="Index">Plans</a>
+                               asp-controller="Plan" asp-action="Index">Plans</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                               asp-controller="Memberships" asp-action="Index">Memberships</a>
+                               asp-controller="Membership" asp-action="Index">Memberships</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                               asp-controller="Sessions" asp-action="Schedule">Sessions Schedule</a>
+                               asp-controller="Session" asp-action="Schedule">Sessions Schedule</a>
                         </li>
                         <li class="nav-item">
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">

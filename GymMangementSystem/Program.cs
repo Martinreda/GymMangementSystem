@@ -7,6 +7,7 @@ using GymManagmentBSL.Services.Classes;
 using GymManagmentBSL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace GymMangementSystem
 {
     public class Program
@@ -30,6 +31,7 @@ namespace GymMangementSystem
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddAutoMapper(X=> X.AddProfile(new MappingProfiles()));
             builder.Services.AddScoped<IAnalyticsService , AnalyticsService>();
+            builder.Services.AddScoped<IMemberService, MemberService>();
             //builder.Services.AddScoped<ITrainerRepositories, TrainerRepository>();
             var app = builder.Build();
 
