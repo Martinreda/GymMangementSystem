@@ -1,4 +1,5 @@
-﻿using GymManagementDAL.Entities;
+﻿using AutoMapper;
+using GymManagementDAL.Entities;
 using GymManagementDAL.Repositiories.Interfaces;
 using GymManagmentBSL.Services.Interfaces;
 using GymManagmentBSL.ViewModels.TrianerViewModels;
@@ -13,42 +14,29 @@ namespace GymManagmentBSL.Services.Classes
     internal class TrianerService : ITrianerService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public TrianerService(IUnitOfWork unitOfWork)
+        public TrianerService(IUnitOfWork unitOfWork , IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         public bool CreateTrainer(CreateTrainerViewModel createdTrainer)
         {
             try
             {
-                var Repo = _unitOfWork.GetRepository<Trainer>();
+                var repo = _unitOfWork.GetRepository<Trainer>();
 
-                if (IsEmailExists(createdTrainer.Email) || IsPhoneExists(createdTrainer.Phone)) return false;
-                var Trainer = new Trainer()
-                {
-                    Name = createdTrainer.Name,
-                    Email = createdTrainer.Email,
-                    Phone = createdTrainer.Phone,
-                    DateOfBirth = createdTrainer.DateOfBirth,
-                    Specialties = createdTrainer.Specialties,
-                    Gender = createdTrainer.Gender,
-                    Address = new Address()
-                    {
-                        BulidingNumber = createdTrainer.BuildingNumber,
-                        City = createdTrainer.City,
-                        Street = createdTrainer.Street,
-                    }
-                };
+                if (IsEmailExists(createdTrainer.Email) || IsPhoneExists(createdTrainer.Phone))
+                    return false;
 
+                var trainer = _mapper.Map<Trainer>(createdTrainer);
 
-                Repo.Add(Trainer);
+                repo.Add(trainer);
 
                 return _unitOfWork.SaveChanges() > 0;
-
-
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
@@ -56,75 +44,54 @@ namespace GymManagmentBSL.Services.Classes
 
         public IEnumerable<TrainerViewModel> GetAllTrainers()
         {
-            var Trainers = _unitOfWork.GetRepository<Trainer>().GetALl();
-            if (Trainers is null || !Trainers.Any()) return [];
+            var trainers = _unitOfWork.GetRepository<Trainer>().GetALl();
+            if (trainers == null || !trainers.Any())
+                return Enumerable.Empty<TrainerViewModel>();
 
-            return Trainers.Select(X => new TrainerViewModel
-            {
-                Id = X.Id,
-                Name = X.Name,
-                Email = X.Email,
-                Phone = X.Phone,
-                Specialties = X.Specialties.ToString()
-            });
+            return _mapper.Map<IEnumerable<TrainerViewModel>>(trainers);
         }
 
         public TrainerViewModel? GetTrainerDetails(int trainerId)
         {
-            var Trainer = _unitOfWork.GetRepository<Trainer>().GetById(trainerId);
-            if (Trainer is null) return null;
+            var trainer = _unitOfWork.GetRepository<Trainer>().GetById(trainerId);
+            if (trainer == null) return null;
 
-
-            return new TrainerViewModel
-            {
-                Email = Trainer.Email,
-                Name = Trainer.Name,
-                Phone = Trainer.Phone,
-                Specialties = Trainer.Specialties.ToString()
-            };
+            return _mapper.Map<TrainerViewModel>(trainer);
         }
+
         public TrainerToUpdateViewModel? GetTrainerToUpdate(int trainerId)
         {
-            var Trainer = _unitOfWork.GetRepository<Trainer>().GetById(trainerId);
-            if (Trainer is null) return null;
+            var trainer = _unitOfWork.GetRepository<Trainer>().GetById(trainerId);
+            if (trainer == null) return null;
 
-            return new TrainerToUpdateViewModel()
-            {
-                Name = Trainer.Name, // For Display 
-                Email = Trainer.Email,
-                Phone = Trainer.Phone,
-                Street = Trainer.Address.Street,
-                BuildingNumber = Trainer.Address.BulidingNumber,
-                City = Trainer.Address.City,
-                Specialties = Trainer.Specialties
-            };
+            return _mapper.Map<TrainerToUpdateViewModel>(trainer);
         }
+
         public bool RemoveTrainer(int trainerId)
         {
-            var Repo = _unitOfWork.GetRepository<Trainer>();
-            var TrainerToRemove = Repo.GetById(trainerId);
-            if (TrainerToRemove is null || HasActiveSessions(trainerId)) return false;
-            Repo.Delete(TrainerToRemove);
+            var repo = _unitOfWork.GetRepository<Trainer>();
+            var trainerToRemove = repo.GetById(trainerId);
+
+            if (trainerToRemove == null || HasActiveSessions(trainerId)) return false;
+
+            repo.Delete(trainerToRemove);
             return _unitOfWork.SaveChanges() > 0;
         }
 
         public bool UpdateTrainerDetails(TrainerToUpdateViewModel updatedTrainer, int trainerId)
         {
-            var Repo = _unitOfWork.GetRepository<Trainer>();
-            var TrainerToUpdate = Repo.GetById(trainerId);
+            var repo = _unitOfWork.GetRepository<Trainer>();
+            var trainerToUpdate = repo.GetById(trainerId);
 
-            if (TrainerToUpdate is null || IsEmailExists(updatedTrainer.Email) || IsPhoneExists(updatedTrainer.Phone)) return false;
+            if (trainerToUpdate == null || IsEmailExists(updatedTrainer.Email) || IsPhoneExists(updatedTrainer.Phone))
+                return false;
 
-            TrainerToUpdate.Email = updatedTrainer.Email;
-            TrainerToUpdate.Phone = updatedTrainer.Phone;
-            TrainerToUpdate.Address.BulidingNumber = updatedTrainer.BuildingNumber;
-            TrainerToUpdate.Address.Street = updatedTrainer.Street;
-            TrainerToUpdate.Address.City = updatedTrainer.City;
-            TrainerToUpdate.Specialties = updatedTrainer.Specialties;
-            TrainerToUpdate.UpdatedAt = DateTime.Now;
-            Repo.Update(TrainerToUpdate);
+            _mapper.Map(updatedTrainer, trainerToUpdate);
+
+            repo.Update(trainerToUpdate);
             return _unitOfWork.SaveChanges() > 0;
         }
+
 
         #region Helper Methods
 

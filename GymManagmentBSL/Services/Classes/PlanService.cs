@@ -1,4 +1,5 @@
-﻿using GymManagementDAL.Entities;
+﻿using AutoMapper;
+using GymManagementDAL.Entities;
 using GymManagementDAL.Repositiories.Interfaces;
 using GymManagmentBSL.Services.Interfaces;
 using GymManagmentBSL.ViewModels.PlanViewModels;
@@ -13,68 +14,51 @@ namespace GymManagmentBSL.Services.Classes
     internal class PlanService : IPlanService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public PlanService(IUnitOfWork unitOfWork)
+        public PlanService(IUnitOfWork unitOfWork , IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         public IEnumerable<PlanViewModel> GetAllPlans()
         {
-            var Plans = _unitOfWork.GetRepository<Plan>().GetALl();
-            if (Plans is null || !Plans.Any()) return [];
-            return Plans.Select(P => new PlanViewModel()
-            {
-                Description = P.Description,
-                DurationDays = P.DurationDays,
-                Id = P.Id,
-                IsActive = P.IsActive,
-                Name = P.Name,
-                Price = P.Price
-            });
+            var plans = _unitOfWork.GetRepository<Plan>().GetALl();
+            if (plans == null || !plans.Any()) return Enumerable.Empty<PlanViewModel>();
+
+            // استخدم AutoMapper للتحويل
+            return _mapper.Map<IEnumerable<PlanViewModel>>(plans);
         }
 
         public PlanViewModel? GetPlanById(int planId)
         {
-            var Plan = _unitOfWork.GetRepository<Plan>().GetById(planId);
-            if (Plan is null) return null;
-            return new PlanViewModel()
-            {
-                Id = Plan.Id,
-                Name = Plan.Name,
-                Description = Plan.Description,
-                DurationDays = Plan.DurationDays,
-                IsActive = Plan.IsActive,
-                Price = Plan.Price,
-            };
+            var plan = _unitOfWork.GetRepository<Plan>().GetById(planId);
+            if (plan == null) return null;
+
+            return _mapper.Map<PlanViewModel>(plan);
         }
 
         public UpdatePlanViewModel? GetPlanToUpdate(int planId)
         {
-            var Plan = _unitOfWork.GetRepository<Plan>().GetById(planId);
-            if (Plan is null || Plan.IsActive == false || 
-                HasActiveMemberShips(planId)) return null;
+            var plan = _unitOfWork.GetRepository<Plan>().GetById(planId);
+            if (plan == null || !plan.IsActive || HasActiveMemberShips(planId)) return null;
 
-            return new UpdatePlanViewModel()
-            {
-                Description = Plan.Description,
-                DurationDays = Plan.DurationDays,
-                PlanName = Plan.Name,
-                Price = Plan.Price,
-            };
-
+            return _mapper.Map<UpdatePlanViewModel>(plan);
         }
+
         public bool UpdatePlan(int planId, UpdatePlanViewModel updatedPlan)
         {
-            var Plan = _unitOfWork.GetRepository<Plan>().GetById(planId);
-            if (Plan is null || HasActiveMemberShips(planId)) return false;
+            var plan = _unitOfWork.GetRepository<Plan>().GetById(planId);
+            if (plan == null || HasActiveMemberShips(planId)) return false;
 
             try
             {
-                // description -- price -- duration days 
-                (Plan.Description, Plan.Price, Plan.DurationDays, Plan.UpdatedAt) =
-                    (updatedPlan.Description, updatedPlan.Price, updatedPlan.DurationDays, DateTime.Now);
+                // استخدم AutoMapper لتحديث الخصائص بدل التعيين اليدوي
+                _mapper.Map(updatedPlan, plan);
 
-                _unitOfWork.GetRepository<Plan>().Update(Plan);
+                plan.UpdatedAt = DateTime.Now;
+
+                _unitOfWork.GetRepository<Plan>().Update(plan);
                 return _unitOfWork.SaveChanges() > 0;
             }
             catch
@@ -82,25 +66,29 @@ namespace GymManagmentBSL.Services.Classes
                 return false;
             }
         }
+
         public bool ToggleStatus(int planId)
         {
-            var Repo = _unitOfWork.GetRepository<Plan>();
-            var Plan = Repo.GetById(planId);
-            if (Plan is null || HasActiveMemberShips(planId)) return false;
-            Plan.IsActive = Plan.IsActive == true ? false : true;
-            Plan.UpdatedAt = DateTime.Now;
+            var repo = _unitOfWork.GetRepository<Plan>();
+            var plan = repo.GetById(planId);
+            if (plan == null || HasActiveMemberShips(planId)) return false;
+
+            plan.IsActive = !plan.IsActive;
+            plan.UpdatedAt = DateTime.Now;
+
             try
             {
-                Repo.Update(Plan);
-                return _unitOfWork.SaveChanges() > 0; 
+                repo.Update(plan);
+                return _unitOfWork.SaveChanges() > 0;
             }
             catch
             {
-                return false; 
+                return false;
             }
         }
 
-       
+
+
         #region Helper 
 
         private bool HasActiveMemberShips(int planId)
