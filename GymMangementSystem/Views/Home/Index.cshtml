@@ -1,4 +1,6 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+﻿@using GymManagmentBSL.ViewModels.AnalyticsViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model AnalyticsViewModel
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +16,38 @@
     <link rel="stylesheet" href="~/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/style.css" />
     <title>Power fitness | Home</title>
+
+    <style>
+        .stats-bar .stat {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin: 10px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+            .stats-bar .stat:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            }
+
+        .stats-bar .fw-bolder {
+            color: #007bff;
+        }
+
+        .dashboard-section {
+            margin-top: 60px;
+        }
+
+        .dashboard-title {
+            font-weight: 700;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -93,24 +127,45 @@
                             </p>
                         </header>
 
-                        <div class="stats-bar">
+                        <!-- ✅ Dynamic Stats Section -->
+                        <div class="stats-bar mt-4">
                             <div class="row g-0">
                                 <div class="col-4">
                                     <div class="stat">
-                                        <span class="fw-bolder fs-5 d-block mb-1">100</span>
-                                        <h3 class="fs-5 fw-normal">Total Members</h3>
+                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.TotalMembers</span>
+                                        <h3 class="fs-6 fw-normal">Total Members</h3>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="stat">
-                                        <span class="fw-bolder fs-5 d-block mb-1">85</span>
-                                        <h3 class="fs-5 fw-normal">Active Members</h3>
+                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.ActiveMembers</span>
+                                        <h3 class="fs-6 fw-normal">Active Members</h3>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="stat">
-                                        <span class="fw-bolder fs-5 d-block mb-1">20</span>
-                                        <h3 class="fs-5 fw-normal">Trainers</h3>
+                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.TotalTrainers</span>
+                                        <h3 class="fs-6 fw-normal">Trainers</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row g-0 mt-3">
+                                <div class="col-4">
+                                    <div class="stat">
+                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.UpcomingSessions</span>
+                                        <h3 class="fs-6 fw-normal">Upcoming Sessions</h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat">
+                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.OngoingSessions</span>
+                                        <h3 class="fs-6 fw-normal">Ongoing Sessions</h3>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="stat">
+                                        <span class="fw-bolder fs-5 d-block mb-1">@Model.CompletedSessions</span>
+                                        <h3 class="fs-6 fw-normal">Completed Sessions</h3>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +192,7 @@
                 </div>
             </div>
 
-            <div class="bar bg-primary-color d-flex py-4 text-white fw-bolder align-items-center">
+            <div class="bar bg-primary-color d-flex py-4 text-white fw-bolder align-items-center mt-5">
                 <p class="py-0 my-0 overflow-hidden text-nowrap">
                     outdoor & online trainers
                     <img src="~/images/star.svg" alt="star icon" /> personal training
@@ -145,9 +200,9 @@
                     <img src="~/images/star.svg" alt="star icon" /> personal trainers
                 </p>
             </div>
-
-           
         </main>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

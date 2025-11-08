@@ -1,14 +1,24 @@
 ﻿using GymManagementDAL.Entities;
+using GymManagmentBSL.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymMangementSystem.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IAnalyticsService _analyticsService;
+
+        public HomeController(IAnalyticsService analyticsService)
         {
-            return View();
+            _analyticsService = analyticsService;
         }
+
+        public ActionResult Index()
+        {
+            var Data = _analyticsService.GetAnalyticsData();
+            return View(model: Data);
+        }
+        
         public JsonResult Trainers()
         {
             var Trainers = new List<Trainer>()
