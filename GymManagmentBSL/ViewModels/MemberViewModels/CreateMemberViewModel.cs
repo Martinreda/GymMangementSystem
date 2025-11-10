@@ -21,7 +21,7 @@ namespace GymManagmentBSL.ViewModels.MemberViewModels
         [Required(ErrorMessage = "Email Is Requierd")]
         [EmailAddress (ErrorMessage ="Invalid email Format ")] //Valdition
         [DataType(DataType.EmailAddress)] // UI Hint
-        [StringLength(100, MinimumLength = 5, ErrorMessage = "Email Must Be Between 5 and 100 Characters")]
+        [StringLength( maximumLength:100, MinimumLength = 5, ErrorMessage = "Email Must Be Between 5 and 100 Characters")]
         public string Email { get; set; } = null!;
 
 

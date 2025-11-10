@@ -1,11 +1,6 @@
 ﻿using GymManagementDAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GymManagementDAL.Data.Configurations
 {
@@ -20,7 +15,7 @@ namespace GymManagementDAL.Data.Configurations
             builder.Property(X => X.Email)
               .HasColumnType("varchar")
               .HasMaxLength(100);
-            builder.Property(X => X.Email)
+            builder.Property(X => X.Phone)
              .HasColumnType("varchar")
              .HasMaxLength(11);
 
@@ -47,7 +42,7 @@ namespace GymManagementDAL.Data.Configurations
 
                 AddressBuilder.Property(X => X.BulidingNumber)
              .HasColumnName("BulidingNumber");
-             
+
             });
         }
     }
