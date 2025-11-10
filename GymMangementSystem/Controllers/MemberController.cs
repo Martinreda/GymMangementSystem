@@ -1,4 +1,5 @@
 ﻿using GymManagmentBSL.Services.Interfaces;
+using GymManagmentBSL.ViewModels.MemberViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymMangementSystem.Controllers
@@ -12,7 +13,6 @@ namespace GymMangementSystem.Controllers
             _memberService = memberService;
         }
 
-
         #region Get All Members
         public ActionResult Index()
         {
@@ -22,9 +22,6 @@ namespace GymMangementSystem.Controllers
         #endregion
 
         #region Get Member Data
-        // BaseUrl/Member/MemberDetails -> id = 0
-        // BaseUrl/Member/MemberDetails/1 -> id = 1
-
         public ActionResult MemberDetails(int id)
         {
             // 1. Validate ID input
@@ -44,6 +41,52 @@ namespace GymMangementSystem.Controllers
 
             // 4. Return view with model
             return View(model: Member);
+        }
+        #endregion
+
+        #region Create Member
+        // GET: Member/Create
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Member/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CreateMemberViewModel model)
+        {
+            try
+            {
+                // 1. Validate model state
+                if (!ModelState.IsValid)
+                {
+                    return View(model: model);
+                }
+
+                // 2. Call service to create member
+                var result = _memberService.CreateMember(model);
+
+                // 3. Handle result
+                if (result)
+                {
+                    // Success - redirect to members list
+                    return RedirectToAction(actionName: nameof(Index));
+                }
+                else
+                {
+                    // Failure - show error message
+                    ModelState.AddModelError("", "Failed to create member. Email or phone may already exist.");
+                    return View(model: model);
+                }
+            }
+            catch (System.Exception)
+            {
+                // Handle unexpected errors
+                ModelState.AddModelError("", "An unexpected error occurred while creating the member.");
+                return View(model: model);
+            }
         }
         #endregion
     }
