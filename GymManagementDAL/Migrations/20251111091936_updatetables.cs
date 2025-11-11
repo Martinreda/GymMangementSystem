@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace GymManagementDAL.Data.Migrations
+namespace GymManagementDAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class updatetables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,26 +33,22 @@ namespace GymManagementDAL.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Height = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    BloodType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "GETDATE()"),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "varchar(11)", maxLength: 11, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "varchar(11)", maxLength: 11, nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    BulidingNumber = table.Column<int>(type: "int", nullable: false),
+                    BuildingNumber = table.Column<int>(type: "int", nullable: false),
                     Street = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
                     City = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Members", x => x.Id);
-                    table.CheckConstraint("GymValidEmailCheck", "Email Like '_%@_%._%'");
-                    table.CheckConstraint("GymValidPhoneCheck", "Phone Like '01%' and Phone not Like '%[^0-9]%'");
+                    table.CheckConstraint("GymValidEmailCheck", "Email LIKE '_%@_%._%' AND Email NOT LIKE '% %'");
+                    table.CheckConstraint("GymValidPhoneCheck", "Phone LIKE '01[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'");
                 });
 
             migrationBuilder.CreateTable(
@@ -83,21 +79,44 @@ namespace GymManagementDAL.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Specialties = table.Column<int>(type: "int", nullable: false),
                     HireDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "GETDATE()"),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "varchar(11)", maxLength: 11, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "varchar(11)", maxLength: 11, nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
-                    BulidingNumber = table.Column<int>(type: "int", nullable: false),
+                    BuildingNumber = table.Column<int>(type: "int", nullable: false),
                     Street = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
                     City = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Trainers", x => x.Id);
-                    table.CheckConstraint("GymValidEmailCheck1", "Email Like '_%@_%._%'");
-                    table.CheckConstraint("GymValidPhoneCheck1", "Phone Like '01%' and Phone not Like '%[^0-9]%'");
+                    table.CheckConstraint("GymValidEmailCheck1", "Email LIKE '_%@_%._%' AND Email NOT LIKE '% %'");
+                    table.CheckConstraint("GymValidPhoneCheck1", "Phone LIKE '01[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HealthRecords",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Height = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
+                    BloodType = table.Column<string>(type: "varchar(5)", maxLength: 5, nullable: false),
+                    Note = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "GETDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HealthRecords", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_HealthRecords_Members_Id",
+                        column: x => x.Id,
+                        principalTable: "Members",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -189,6 +208,12 @@ namespace GymManagementDAL.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Categories_CategoryName",
+                table: "Categories",
+                column: "CategoryName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Members_Email",
                 table: "Members",
                 column: "Email",
@@ -236,6 +261,9 @@ namespace GymManagementDAL.Data.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "HealthRecords");
+
             migrationBuilder.DropTable(
                 name: "MemberSessions");
 

@@ -1,4 +1,5 @@
-﻿using GymManagmentBSL.Services.Interfaces;
+﻿using GymManagementDAL.Entities.Enums;
+using GymManagmentBSL.Services.Interfaces;
 using GymManagmentBSL.ViewModels.MemberViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,8 @@ namespace GymMangementSystem.Controllers
             var members = _memberService.GetAllMembers();
             return View(model: members);
         }
+
+
         #endregion
 
         #region Get Member Data
@@ -41,6 +44,20 @@ namespace GymMangementSystem.Controllers
 
             // 4. Return view with model
             return View(model: Member);
+        }
+
+        public ActionResult HealthRecordDetails(int id)
+        {
+            if (id <= 0)
+            {
+                return RedirectToAction(actionName: nameof(Index));
+            }
+
+            var HealthRecord = _memberService.GetMemberHealthRecordDetails( id);
+
+            if (HealthRecord is null) return RedirectToAction(actionName: nameof(Index));
+
+            return View(model: HealthRecord);
         }
         #endregion
 
@@ -89,5 +106,34 @@ namespace GymMangementSystem.Controllers
             }
         }
         #endregion
+        // في MemberController.cs
+        public IActionResult AddTestMember()
+        {
+            var result = _memberService.CreateMember(new CreateMemberViewModel
+            {
+                Name = "Test Member",
+                Email = "test@test.com",
+                Phone = "01012345678",
+                DateOfBirth = new DateOnly(1990, 1, 1),
+                Gender = Gender.Male,
+                BuildingNumber = 123,
+                Street = "Test Street",
+                City = "Test City",
+                HealthRecordViewModel = new HealthRecordViewModel
+                {
+                    Height = 175.0m,
+                    Weight = 70.0m,
+                    BloodType = "A+",
+                    Note = "Test record"
+                }
+            });
+
+            if (result)
+                TempData["Success"] = "Member added!";
+            else
+                TempData["Error"] = "Failed to add member";
+
+            return RedirectToAction("Index");
+        }
     }
 }
