@@ -9,7 +9,7 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.Property(x => x.CategoryName)
             .HasColumnType("varchar")
             .HasMaxLength(20)
-            .IsRequired(); // إضافة required constraint
+            .IsRequired(); 
 
         builder.HasIndex(x => x.CategoryName)
             .IsUnique(); // منع تكرار الأسماء

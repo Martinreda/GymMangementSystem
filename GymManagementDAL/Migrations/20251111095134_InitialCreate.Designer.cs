@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagementDAL.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    [Migration("20251111091936_updatetables")]
-    partial class updatetables
+    [Migration("20251111095134_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
