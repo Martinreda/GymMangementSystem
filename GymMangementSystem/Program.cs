@@ -32,6 +32,10 @@ namespace GymMangementSystem
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IAnalyticsService , AnalyticsService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
+           
+         
+            builder.Services.AddScoped<IMembershipService, MembershipService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -44,7 +48,7 @@ namespace GymMangementSystem
             builder.Services.AddControllersWithViews();
 
             // Register your services
-            builder.Services.AddScoped<ITrainerService, TrainerService>();  // التسجيل الصحيح
+            builder.Services.AddScoped<ITrainerService, TrainerService>();  
 
             // باقي التسجيلات...
             // builder.Services.AddScoped<IMemberService, MemberService>();

@@ -24,6 +24,10 @@ namespace GymManagementDAL.Repositiories.Classes
 
         public ISessionRepository SessionRepository { get; }
 
+        public IMembershipRepository MembershipRepository { get; }
+
+        public IBookingRepository BookingRepository { get; }
+
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()
         {
             // Key >> Type [Member]
