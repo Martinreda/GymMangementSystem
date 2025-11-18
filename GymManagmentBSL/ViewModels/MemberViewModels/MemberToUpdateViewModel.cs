@@ -9,6 +9,7 @@ namespace GymManagmentBSL.ViewModels.MemberViewModels
 {
     public class MemberToUpdateViewModel
     {
+        public int Id { get; set; }
         public string Name { get; set; } = null!; 
         public string? Photo { get; set; }
 

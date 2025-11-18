@@ -1,4 +1,4 @@
-using GymManagementDAL.Data.Contexts;
+﻿using GymManagementDAL.Data.Contexts;
 using GymManagementDAL.Data.DataSeed;
 using GymManagementDAL.Repositiories.Classes;
 using GymManagementDAL.Repositiories.Interfaces;
@@ -6,6 +6,7 @@ using GymManagmentBSL;
 using GymManagmentBSL.Services.Classes;
 using GymManagmentBSL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace GymMangementSystem
@@ -28,11 +29,31 @@ namespace GymMangementSystem
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddAutoMapper(X=> X.AddProfile(new MappingProfiles()));
+            builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IAnalyticsService , AnalyticsService>();
             builder.Services.AddScoped<IMemberService, MemberService>();
-            //builder.Services.AddScoped<ITrainerRepositories, TrainerRepository>();
-            var app = builder.Build();
 
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+
+            // Register your services
+            builder.Services.AddScoped<IPlanService, PlanService>();
+
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+
+            // Register your services
+            builder.Services.AddScoped<ITrainerService, TrainerService>();  // التسجيل الصحيح
+
+            // باقي التسجيلات...
+            // builder.Services.AddScoped<IMemberService, MemberService>();
+
+            var app = builder.Build();
+            //builder.Services.AddScoped<ITrainerRepositories, TrainerRepository>();
+            
+            
+          
 
 
 
@@ -67,6 +88,9 @@ namespace GymMangementSystem
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             // WithStaticAssets() is non-standard/likely custom
+
+   
+
 
             app.Run();
         }

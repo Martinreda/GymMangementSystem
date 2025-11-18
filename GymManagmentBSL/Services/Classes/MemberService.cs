@@ -3,6 +3,7 @@ using GymManagementDAL.Entities;
 using GymManagementDAL.Repositiories.Interfaces;
 using GymManagmentBSL.Services.Interfaces;
 using GymManagmentBSL.ViewModels.MemberViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
@@ -161,6 +162,26 @@ namespace GymManagmentBSL.Services.Classes
                 return false;
             }
         }
+
+        // في الـ MemberService
+        public bool HasFutureSessions(int memberId)
+        {
+            return _unitOfWork.GetRepository<Session>()
+                .GetALl(s => s.Id == memberId &&
+                             s.StartDate >= DateTime.Today &&
+                             s.Description != "Cancelled")
+                .Any();
+        }
+
+        public List<Session> GetFutureSessions(int memberId)
+        {
+            return _unitOfWork.GetRepository<Session>()
+                .GetALl(s => s.Id == memberId &&
+                             s.StartDate >= DateTime.Today &&
+                             s.Description != "Cancelled")
+                .ToList();
+        }
+
 
 
         #region Helper Methods 

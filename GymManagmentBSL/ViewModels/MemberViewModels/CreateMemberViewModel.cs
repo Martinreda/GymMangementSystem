@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+
 namespace GymManagmentBSL.ViewModels.MemberViewModels
 {
     public class CreateMemberViewModel
@@ -63,7 +65,10 @@ namespace GymManagmentBSL.ViewModels.MemberViewModels
         public string City { get; set; } = null!;
 
         [Required (ErrorMessage = "Health Record is Required")]
-        public HealthRecordViewModel HealthRecordViewModel { get; set; } = null!;
+ 
+
+        // خاصية للصحة
+        public HealthRecordViewModel HealthRecord { get; set; } = null!;
 
     }
 }

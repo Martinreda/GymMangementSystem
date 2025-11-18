@@ -9,7 +9,7 @@ namespace GymManagementDAL.Entities
     public class Category : BaseEntity
     {
         public string CategoryName { get; set; } = null!;
-
+        public bool IsActive { get; set; }
         public ICollection<Session> sessions { get; set; } = null!;
     }
 }

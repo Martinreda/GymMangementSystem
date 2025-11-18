@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentBSL.ViewModels.TrianerViewModels
 {
-    internal class CreateTrainerViewModel
+    public class CreateTrainerViewModel
     {
         [Required(ErrorMessage = "Name Is Required")]
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name can only contain letters and spaces")]

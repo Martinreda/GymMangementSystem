@@ -152,10 +152,67 @@ namespace GymManagmentBSL.Services.Classes
                 }
             }
         }
+        public bool CanSessionBeDeleted(int sessionId)
+        {
+            var session = _unitOfWork.SessionRepository.GetById(sessionId);
+            return IsSessionAvailableForRemoving(session!);
+        }
+        public IEnumerable<SelectTrainerViewModel> GetTrainerDropDown()
+        {
+            try
+            {
+                var trainers = _unitOfWork.GetRepository<Trainer>()
+                    .GetALl() 
+                    .Where(t => t.IsActive) 
+                    .OrderBy(t => t.Name)
+                    
+                    .ToList();
+
+                var trainerViewModels = trainers.Select(t => new SelectTrainerViewModel
+                {
+                    Id = t.Id,
+                    FullName = $"{t.Name} ",
+                    Specialization = t.Specialties.ToString(),
+                    Email = t.Email,
+                    IsActive = t.IsActive
+                });
 
 
+                return trainerViewModels;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving trainers dropdown: {ex.Message}");
+                return new List<SelectTrainerViewModel>();
+            }
+        }
 
+        public IEnumerable<SelectCategoryViewModel> GetCategoryDropDown()
+        {
+            try
+            {
+                var categories = _unitOfWork.GetRepository<Category>()
+                    .GetALl() 
+                    .Where(c => c.IsActive) 
+                    .OrderBy(c => c.Id) 
+                    .ToList();
 
+                var categoryViewModels = categories.Select(c => new SelectCategoryViewModel
+                {
+                    Id = c.Id,
+                    CategoryName = c.CategoryName,
+                    
+                    IsActive = c.IsActive
+                });
+
+                return categoryViewModels;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving categories dropdown: {ex.Message}");
+                return new List<SelectCategoryViewModel>();
+            }
+        }
         #region Helper Methods
 
         private bool IsSessionAvailableForUpdating(Session session)
@@ -206,7 +263,9 @@ namespace GymManagmentBSL.Services.Classes
             return StartDate < EndDate;
         }
 
-      
+     
+
+
         #endregion
     }
 }

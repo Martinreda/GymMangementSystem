@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentBSL.ViewModels.TrianerViewModels
 {
-    internal class TrainerToUpdateViewModel
+    public class TrainerToUpdateViewModel
     {
         public string Name { get; set; } = null!;
 
@@ -39,5 +39,7 @@ namespace GymManagmentBSL.ViewModels.TrianerViewModels
 
         [Required(ErrorMessage = "Specialty is Required")]
         public Specialties Specialties { get; set; }
+
+        public string? Photo { get; set; }
     }
 }

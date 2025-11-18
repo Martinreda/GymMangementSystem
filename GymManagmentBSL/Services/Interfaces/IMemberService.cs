@@ -1,4 +1,5 @@
-﻿using GymManagmentBSL.ViewModels.MemberViewModels;
+﻿using GymManagementDAL.Entities;
+using GymManagmentBSL.ViewModels.MemberViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,10 @@ namespace GymManagmentBSL.Services.Interfaces
         bool UpdateMemberDetails(int Id, MemberToUpdateViewModel UpdatedMember);
 
         bool RemoveMember(int MemberId);
+
+        bool HasFutureSessions(int memberId);
+
+        List<Session> GetFutureSessions(int memberId);
 
     }
 }

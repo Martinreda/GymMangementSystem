@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace GymManagmentBSL.Services.Classes
 {
-    internal class TrianerService : ITrianerService
+    public class TrainerService : ITrainerService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public TrianerService(IUnitOfWork unitOfWork , IMapper mapper)
+        public TrainerService(IUnitOfWork unitOfWork , IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -92,6 +92,20 @@ namespace GymManagmentBSL.Services.Classes
             return _unitOfWork.SaveChanges() > 0;
         }
 
+        public bool HasActiveSessions(int trainerId)
+        {
+            return _unitOfWork.GetRepository<Session>()
+                .GetALl(s => s.TrainerId == trainerId && s.Description != "Cancelled" && s.StartDate >= DateTime.Today)
+                .Any();
+        }
+
+        public IEnumerable<Session> GetActiveSessions(int trainerId)
+        {
+            return _unitOfWork.GetRepository<Session>()
+                .GetALl(s => s.TrainerId == trainerId && s.Description != "Cancelled" && s.StartDate >= DateTime.Today)
+                .ToList();
+        }
+
 
         #region Helper Methods
 
@@ -109,12 +123,7 @@ namespace GymManagmentBSL.Services.Classes
             return existing;
         }
 
-        private bool HasActiveSessions(int Id)
-        {
-            var activeSessions = _unitOfWork.GetRepository<Session>().GetALl(
-               s => s.TrainerId == Id && s.StartDate > DateTime.Now).Any();
-            return activeSessions;
-        }
+      
         #endregion
     }
 }

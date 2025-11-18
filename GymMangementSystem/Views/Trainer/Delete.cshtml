@@ -1,0 +1,454 @@
+﻿@using GymManagementDAL.Entities
+@model GymManagmentBSL.ViewModels.TrianerViewModels.TrainerViewModel
+@{
+    bool hasActiveSessions = ViewBag.HasActiveSessions ?? false;
+    var activeSessions = ViewBag.ActiveSessions as List<Session> ?? new List<Session>();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Trainer - Power Fitness</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --danger-color: #f72585;
+            --warning-color: #f8961e;
+            --info-color: #4cc9f0;
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: white;
+            transition: var(--transition);
+            max-width: 650px;
+            width: 100%;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            }
+
+        .warning-icon {
+            font-size: 4rem;
+            color: var(--warning-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            color: var(--danger-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .trainer-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .trainer-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .trainer-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .trainer-details {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .alert-warning-custom {
+            background: rgba(248, 150, 30, 0.1);
+            border: 1px solid rgba(248, 150, 30, 0.2);
+            border-left: 4px solid var(--warning-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .alert-danger-custom {
+            background: rgba(247, 37, 133, 0.1);
+            border: 1px solid rgba(247, 37, 133, 0.2);
+            border-left: 4px solid var(--danger-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .btn-danger-custom {
+            background: linear-gradient(135deg, var(--danger-color), #b5179e);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: var(--transition);
+            flex: 1;
+        }
+
+            .btn-danger-custom:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(247, 37, 133, 0.3);
+            }
+
+            .btn-danger-custom:disabled {
+                background: #6c757d;
+                cursor: not-allowed;
+                opacity: 0.6;
+            }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: var(--transition);
+            flex: 1;
+            background: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-outline-custom:hover {
+                background: var(--primary-color);
+                color: white;
+                transform: translateY(-2px);
+            }
+
+        .btn-info-custom {
+            border: 2px solid var(--info-color);
+            color: var(--info-color);
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: var(--transition);
+            background: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-info-custom:hover {
+                background: var(--info-color);
+                color: white;
+                transform: translateY(-2px);
+            }
+
+        .confirmation-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .sessions-list {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            background: #f8f9fa;
+            margin-top: 1rem;
+        }
+
+        .session-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+            .session-item:last-child {
+                margin-bottom: 0;
+                border-bottom: none;
+            }
+
+        .session-info {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .session-type {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 0.25rem;
+        }
+
+        .session-details {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .session-date {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .badge-upcoming {
+            background: var(--info-color);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .buttons-container {
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @@media (max-width: 768px) {
+            .card {
+                padding: 2rem !important;
+            }
+
+            .confirmation-text {
+                font-size: 1.2rem;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+            }
+
+            .btn-danger-custom,
+            .btn-outline-custom,
+            .btn-info-custom {
+                width: 100%;
+            }
+
+            .session-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card p-5 text-center">
+                    @if (hasActiveSessions)
+                    {
+                        <!-- حالة وجود جلسات نشطة -->
+                        <div class="error-icon">
+                            <i class="fas fa-calendar-times"></i>
+                        </div>
+
+                        <h2 class="confirmation-text text-danger">
+                            Cannot Delete Trainer
+                        </h2>
+
+                        <!-- Trainer Information -->
+                        <div class="trainer-info text-center">
+                            <img src="~/images/@(string.IsNullOrEmpty(Model.Photo) ? "User.jpg" : Model.Photo)"
+                                 alt="@Model.Name" class="trainer-avatar" />
+                            <div class="trainer-name">@Model.Name</div>
+                            <div class="trainer-details">
+                                <div><strong>Email:</strong> @Model.Email</div>
+                                <div><strong>Phone:</strong> @Model.Phone</div>
+                                <div><strong>Specialty:</strong> @Model.Specialties</div>
+                            </div>
+                        </div>
+
+                        <!-- Error Alert -->
+                        <div class="alert alert-danger-custom text-start" role="alert">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-exclamation-circle text-danger me-2 mt-1"></i>
+                                <div class="flex-grow-1">
+                                    <strong class="d-block mb-2">Active Sessions Found</strong>
+                                    <p class="mb-3">This trainer cannot be deleted because they have upcoming scheduled sessions. Please cancel all active sessions first.</p>
+
+                                    @if (activeSessions.Any())
+                                    {
+                                        <div class="sessions-list">
+                                            <strong class="d-block mb-3 text-center">Upcoming Sessions (@activeSessions.Count)</strong>
+                                            @foreach (var session in activeSessions)
+                                            {
+                                                <div class="session-item">
+                                                    <div class="session-info">
+                                                        <div class="session-type">
+                                                            @(session.SessionTrainer?.Name ?? "Training Session")
+                                                        </div>
+                                                        <div class="session-details">
+                                                            <span class="session-date">
+                                                                <i class="fas fa-calendar me-1"></i>
+                                                                @session.StartDate.ToString("MMM dd, yyyy")
+                                                            </span>
+                                                            <span class="ms-3">
+                                                                <i class="fas fa-clock me-1"></i>
+                                                                @session.StartDate.ToString("hh\\:mm") - @session.EndDate.ToString("hh\\:mm")
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="badge-upcoming">Scheduled</span>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="buttons-container d-flex justify-content-between">
+                            <a asp-controller="Trainer" asp-action="Index" class="btn-outline-custom">
+                                <i class="fas fa-arrow-left me-2"></i>BACK TO LIST
+                            </a>
+                            <a asp-controller="Session" asp-action="Index" asp-route-trainerId="@Model.Id" class="btn-info-custom">
+                                <i class="fas fa-calendar me-2"></i>MANAGE SESSIONS
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- حالة عدم وجود جلسات نشطة -->
+                        <div class="warning-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+
+                        <h2 class="confirmation-text">
+                            Delete Trainer Confirmation
+                        </h2>
+
+                        <!-- Trainer Information -->
+                        <div class="trainer-info text-center">
+                            <img src="~/images/@(string.IsNullOrEmpty(Model.Photo) ? "User.jpg" : Model.Photo)"
+                                 alt="@Model.Name" class="trainer-avatar" />
+                            <div class="trainer-name">@Model.Name</div>
+                            <div class="trainer-details">
+                                <div><strong>Email:</strong> @Model.Email</div>
+                                <div><strong>Phone:</strong> @Model.Phone</div>
+                                <div><strong>Specialty:</strong> @Model.Specialties</div>
+                            </div>
+                        </div>
+
+                        <!-- Warning Alert -->
+                        <div class="alert alert-warning-custom text-start" role="alert">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-shield-exclamation text-warning me-2 mt-1"></i>
+                                <div>
+                                    <strong class="d-block mb-2">Final Confirmation Required</strong>
+                                    <p class="mb-2">You are about to permanently delete this trainer and all associated data:</p>
+                                    <ul class="mb-0 ps-3">
+                                        <li>Personal information</li>
+                                        <li>Professional details</li>
+                                        <li>All session records</li>
+                                        <li>Training history</li>
+                                    </ul>
+                                    <p class="mt-2 mb-0"><strong>This action cannot be undone!</strong></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Delete Form -->
+                        <form method="post" asp-action="DeleteConfirmed" asp-route-id="@Model.Id" class="mt-4">
+                            @Html.AntiForgeryToken()
+
+                            <div class="buttons-container d-flex justify-content-between">
+                                <!-- Cancel Button -->
+                                <a asp-controller="Trainer" asp-action="Index" class="btn-outline-custom">
+                                    <i class="fas fa-times me-2"></i>CANCEL
+                                </a>
+
+                                <!-- Confirm Delete Button -->
+                                <button type="submit" class="btn-danger-custom" id="deleteBtn">
+                                    <i class="fas fa-trash me-2"></i>DELETE PERMANENTLY
+                                </button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const deleteBtn = document.getElementById('deleteBtn');
+
+            if (form && deleteBtn) {
+                let isSubmitting = false;
+
+                form.addEventListener('submit', function(e) {
+                    if (isSubmitting) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    // تأكيد نهائي قبل الحذف
+                    const confirmed = confirm('⚠️ FINAL WARNING!\n\nAre you absolutely sure you want to delete trainer \"@Model.Name\"?\n\nThis will permanently erase all trainer data and cannot be recovered.');
+
+                    if (!confirmed) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    isSubmitting = true;
+                    deleteBtn.disabled = true;
+                    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>DELETING...';
+                });
+            }
+
+            // تأثيرات بصرية
+            const card = document.querySelector('.card');
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -42,7 +42,7 @@ namespace GymManagmentBSL
         {
             CreateMap<CreateMemberViewModel, Member>()
     .ForMember(destinationMember: dest => dest.Address, memberOptions: opt => opt.MapFrom(mapExpression: src => src))
-    .ForMember(destinationMember: dest => dest.HealthRecord, memberOptions: opt => opt.MapFrom(mapExpression: src => src.HealthRecordViewModel));
+    .ForMember(destinationMember: dest => dest.HealthRecord, memberOptions: opt => opt.MapFrom(mapExpression: src => src.HealthRecord));
 
             CreateMap<CreateMemberViewModel, Address>()
                 .ForMember(destinationMember: dest => dest.BulidingNumber, memberOptions: opt => opt.MapFrom(mapExpression: src => src.BuildingNumber))

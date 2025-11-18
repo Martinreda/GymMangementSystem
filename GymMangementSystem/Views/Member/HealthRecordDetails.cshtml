@@ -1,61 +1,449 @@
-﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@model HealthRecordViewModel
+﻿@model GymManagmentBSL.ViewModels.MemberViewModels.HealthRecordViewModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Record</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --warning-color: #f8961e;
+            --light-bg: #f8f9fa;
+            --dark-text: #212529;
+            --muted-text: #6c757d;
+            --border-radius: 12px;
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm py-3">
-    <div class="container">
-        <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
-            <img src="~/images/logo.jpg" alt="Logo" style="height: 50px;" class="me-2" />
-            <span class="fw-bold fs-4 text-primary">Gym Management</span>
-        </a>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
 
-        <!-- Toggle Button (for mobile) -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
 
-        <!-- Links -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav m-auto mb-2 mb-lg-0 mt-3 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active px-3 py-2 mx-2 fw-bolder fs-5"
-                       asp-controller="Home" asp-action="Index">Home</a>
-                </li>
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            }
 
-                <li class="nav-item">
-                    <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                       asp-controller="Member" asp-action="Index">Members</a>
-                </li>
+        .card-header {
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1.5rem;
+        }
 
-                <li class="nav-item">
-                    <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                       asp-controller="Trainer" asp-action="Index">Trainers</a>
-                </li>
+        .card-body {
+            padding: 2rem;
+        }
 
-                <li class="nav-item">
-                    <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                       asp-controller="Session" asp-action="Index">Sessions</a>
-                </li>
+        .health-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            height: 100%;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
 
-                <li class="nav-item">
-                    <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                       asp-controller="Plan" asp-action="Index">Plans</a>
-                </li>
+            .health-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            }
 
-                <li class="nav-item">
-                    <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                       asp-controller="Membership" asp-action="Index">Memberships</a>
-                </li>
+            .health-card.height-card {
+                border-left-color: var(--primary-color);
+            }
 
-                <li class="nav-item">
-                    <a class="nav-link px-3 py-2 mx-2 fw-bolder fs-5"
-                       asp-controller="Schedule" asp-action="Index">Sessions Schedule</a>
-                </li>
-            </ul>
+            .health-card.weight-card {
+                border-left-color: var(--success-color);
+            }
+
+            .health-card.blood-card {
+                border-left-color: var(--danger-color);
+            }
+
+            .health-card.note-card {
+                border-left-color: var(--warning-color);
+            }
+
+        .icon-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+            .icon-container.height {
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            }
+
+            .icon-container.weight {
+                background: linear-gradient(135deg, var(--success-color), #4895ef);
+            }
+
+            .icon-container.blood {
+                background: linear-gradient(135deg, var(--danger-color), #b5179e);
+            }
+
+            .icon-container.note {
+                background: linear-gradient(135deg, var(--warning-color), #f3722c);
+            }
+
+        .health-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 15px 0 5px;
+        }
+
+        .health-unit {
+            font-size: 1rem;
+            color: var(--muted-text);
+            font-weight: 500;
+        }
+
+        .health-label {
+            color: var(--muted-text);
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+            .btn-primary-custom:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 7px 14px rgba(67, 97, 238, 0.3);
+            }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+            .btn-outline-custom:hover {
+                background-color: var(--primary-color);
+                color: white;
+                transform: translateY(-2px);
+            }
+
+        .note-content {
+            background-color: #fff9e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            border-left: 3px solid var(--warning-color);
+            min-height: 120px;
+        }
+
+        .empty-note {
+            color: var(--muted-text);
+            font-style: italic;
+        }
+
+        .blood-type-info {
+            font-size: 0.85rem;
+            color: var(--muted-text);
+            margin-top: 5px;
+        }
+
+        /* Modal Styles */
+        .modal-content {
+            border-radius: var(--border-radius);
+            border: none;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 8px;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            transition: var(--transition);
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(67, 97, 238, 0.25);
+            }
+
+        /* استخدام @@ للهروب من Razor */
+        @@media (max-width: 768px) {
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            .health-value {
+                font-size: 1.8rem;
+            }
+
+            .icon-container {
+                width: 45px;
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-12">
+                <div class="card">
+                    <div class="card-header text-white text-center">
+                        <h2 class="mb-1"><i class="fas fa-heartbeat me-2"></i>Health Record</h2>
+                        <p class="mb-0 opacity-75">Member Health Information - John Doe</p>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+
+                            <!-- Height -->
+                            <div class="col-md-6">
+                                <div class="health-card height-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-container height">
+                                            <i class="fas fa-ruler-vertical text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="health-label mb-0">HEIGHT</h6>
+                                        </div>
+                                    </div>
+                                    <h2 class="health-value text-primary mb-0">
+                                        <span id="heightValue">175</span> <span class="health-unit">cm</span>
+                                    </h2>
+                                    <div class="text-muted small mt-2">
+                                        Last updated: <span id="heightDate">15 Jun 2023</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Weight -->
+                            <div class="col-md-6">
+                                <div class="health-card weight-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-container weight">
+                                            <i class="fas fa-weight text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="health-label mb-0">WEIGHT</h6>
+                                        </div>
+                                    </div>
+                                    <h2 class="health-value text-success mb-0">
+                                        <span id="weightValue">72</span> <span class="health-unit">kg</span>
+                                    </h2>
+                                    <div class="text-muted small mt-2">
+                                        Last updated: <span id="weightDate">15 Jun 2023</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Blood Type -->
+                            <div class="col-md-6">
+                                <div class="health-card blood-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-container blood">
+                                            <i class="fas fa-tint text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="health-label mb-0">BLOOD TYPE</h6>
+                                        </div>
+                                    </div>
+                                    <h2 class="health-value text-danger mb-0" id="bloodTypeValue">O+</h2>
+                                    <div class="blood-type-info" id="bloodTypeInfo">
+                                        Universal donor - Most common blood type
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Note -->
+                            <div class="col-md-6">
+                                <div class="health-card note-card">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-container note">
+                                            <i class="fas fa-sticky-note text-white"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="health-label mb-0">HEALTH NOTES</h6>
+                                        </div>
+                                    </div>
+                                    <div class="note-content mt-3">
+                                        <p class="mb-0" id="noteValue">
+                                            Member has mild asthma. Avoid intense cardio exercises.
+                                            Prefers weight training and light aerobic activities.
+                                            Allergic to penicillin. Regular checkups recommended.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer bg-white border-0 px-4 pb-4 pt-0 mt-4">
+                            <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                                <a href="#" onclick="goBack()" class="btn btn-outline-custom">
+                                    <i class="fas fa-arrow-left me-2"></i>Back to List
+                                </a>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#editModal">
+                                        <i class="fas fa-edit me-2"></i>Edit Record
+                                    </button>
+                                    <a href="#" class="btn btn-primary-custom" onclick="window.print()">
+                                        <i class="fas fa-print me-2"></i>Print
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</nav>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel"><i class="fas fa-edit me-2"></i>Edit Health Record</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="healthRecordForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="editHeight" class="form-label">Height (cm)</label>
+                                <input type="number" class="form-control" id="editHeight" min="100" max="250" step="0.1" value="175">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editWeight" class="form-label">Weight (kg)</label>
+                                <input type="number" class="form-control" id="editWeight" min="30" max="200" step="0.1" value="72">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editBloodType" class="form-label">Blood Type</label>
+                                <select class="form-select" id="editBloodType">
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+" selected>O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="editNote" class="form-label">Health Notes</label>
+                                <textarea class="form-control" id="editNote" rows="4">Member has mild asthma. Avoid intense cardio exercises. Prefers weight training and light aerobic activities. Allergic to penicillin. Regular checkups recommended.</textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary-custom" onclick="saveChanges()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // دالة للعودة للصفحة السابقة
+        function goBack() {
+            window.history.back();
+        }
+
+        // معلومات فصائل الدم
+        const bloodTypeInfo = {
+            'A+': 'Can donate to A+ and AB+, receive from A and O',
+            'A-': 'Can donate to A+, A-, AB+, AB-, receive from A- and O-',
+            'B+': 'Can donate to B+ and AB+, receive from B and O',
+            'B-': 'Can donate to B+, B-, AB+, AB-, receive from B- and O-',
+            'AB+': 'Universal plasma donor, can receive from all blood types',
+            'AB-': 'Can donate to AB+ and AB-, receive from AB-, A-, B-, O-',
+            'O+': 'Universal donor, can receive from O+ and O-',
+            'O-': 'Universal red cell donor, can only receive from O-'
+        };
+
+        // تحديث معلومات فصيلة الدم
+        function updateBloodTypeInfo() {
+            const bloodType = document.getElementById('bloodTypeValue').textContent;
+            document.getElementById('bloodTypeInfo').textContent = bloodTypeInfo[bloodType] || '';
+        }
+
+        // حفظ التعديلات
+        function saveChanges() {
+            // الحصول على القيم من النموذج
+            const newHeight = document.getElementById('editHeight').value;
+            const newWeight = document.getElementById('editWeight').value;
+            const newBloodType = document.getElementById('editBloodType').value;
+            const newNote = document.getElementById('editNote').value;
+
+            // تحديث القيم في الصفحة
+            document.getElementById('heightValue').textContent = newHeight;
+            document.getElementById('weightValue').textContent = newWeight;
+            document.getElementById('bloodTypeValue').textContent = newBloodType;
+            document.getElementById('noteValue').textContent = newNote || 'No notes available';
+            document.getElementById('bloodTypeInfo').textContent = bloodTypeInfo[newBloodType] || '';
+
+            // تحديث التواريخ
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('heightDate').textContent = formattedDate;
+            document.getElementById('weightDate').textContent = formattedDate;
+
+            // إغلاق المودال
+            const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+            modal.hide();
+
+            // عرض رسالة نجاح
+            alert('Health record updated successfully!');
+        }
+
+        // تهيئة معلومات فصيلة الدم عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBloodTypeInfo();
+        });
+    </script>
+</body>
+</html>
+

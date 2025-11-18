@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GymManagmentBSL.ViewModels.TrianerViewModels
 {
-    internal class TrainerViewModel
+    public class TrainerViewModel
     {
         public int Id { get; set; }
         public string? Photo { get; set; }

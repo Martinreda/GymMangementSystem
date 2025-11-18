@@ -1,14 +1,9 @@
-﻿using GymManagmentBSL.ViewModels.TrianerViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using GymManagementDAL.Entities;
+using GymManagmentBSL.ViewModels.TrianerViewModels;
 
 namespace GymManagmentBSL.Services.Interfaces
 {
-    internal interface ITrianerService
+    public interface ITrainerService  
     {
         IEnumerable<TrainerViewModel> GetAllTrainers();
         bool CreateTrainer(CreateTrainerViewModel createdTrainer);
@@ -16,5 +11,7 @@ namespace GymManagmentBSL.Services.Interfaces
         TrainerToUpdateViewModel? GetTrainerToUpdate(int trainerId);
         bool UpdateTrainerDetails(TrainerToUpdateViewModel updatedTrainer, int trainerId);
         bool RemoveTrainer(int trainerId);
+        bool HasActiveSessions(int trainerId);
+        IEnumerable<Session> GetActiveSessions(int trainerId);
     }
 }

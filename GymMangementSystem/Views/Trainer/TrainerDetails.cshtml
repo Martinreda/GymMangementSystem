@@ -1,0 +1,439 @@
+﻿@model GymManagmentBSL.ViewModels.TrianerViewModels.TrainerViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainer Details - Power Fitness</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --warning-color: #f8961e;
+            --light-bg: #f8f9fa;
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: white;
+            transition: var(--transition);
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card-header::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+            }
+
+        .trainer-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .badge-specialty {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+
+        .detail-item {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-color);
+            transition: var(--transition);
+        }
+
+            .detail-item:hover {
+                transform: translateX(5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: rgba(67, 97, 238, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .detail-item:hover .icon-box {
+            background: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+            .detail-item:hover .icon-box i {
+                color: white !important;
+            }
+
+        .btn-fill {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 600;
+            color: white;
+            transition: var(--transition);
+            flex: 1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-fill:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 7px 14px rgba(67, 97, 238, 0.3);
+                color: white;
+            }
+
+        .btn-outline-custom {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 12px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: var(--transition);
+            flex: 1;
+            background: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-outline-custom:hover {
+                background: var(--primary-color);
+                color: white;
+                transform: translateY(-2px);
+            }
+
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+            transition: var(--transition);
+        }
+
+            .stats-card:hover {
+                transform: translateY(-3px);
+                border-color: var(--primary-color);
+            }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .alert-custom {
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        @@media (max-width: 768px) {
+            .card-header {
+                padding: 2rem 1rem;
+            }
+
+            .trainer-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .buttons-container {
+                flex-direction: column;
+            }
+
+            .btn-fill, .btn-outline-custom {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Alert Messages -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-custom alert-dismissible fade show">
+                <i class="fas fa-check-circle me-2"></i>
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-custom alert-dismissible fade show">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10">
+                <div class="card shadow-lg border-0">
+                    <!-- Header Section -->
+                    <div class="card-header bg-primary-color text-white text-center position-relative">
+                        <img src="~/images/@(string.IsNullOrEmpty(Model.Photo) ? "User.jpg" : Model.Photo)"
+                             alt="@Model.Name" class="trainer-avatar" />
+                        <h2 class="mb-2 position-relative">@Model.Name</h2>
+                        <span class="badge-specialty position-relative">@Model.Specialties Trainer</span>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <!-- Statistics Cards -->
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <div class="stats-card">
+                                    <div class="stats-number" id="activeSessionsCount">0</div>
+                                    <div class="stats-label">Active Sessions</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="stats-card">
+                                    <div class="stats-number" id="totalMembersCount">0</div>
+                                    <div class="stats-label">Trained Members</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="stats-card">
+                                    <div class="stats-number" id="experienceYears">2+</div>
+                                    <div class="stats-label">Years Experience</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trainer Details -->
+                        <div class="plan-details">
+                            <!-- Email -->
+                            <div class="detail-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="fas fa-envelope text-primary-color fs-4"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1 text-muted">Email Address</h6>
+                                        <p class="mb-0 fw-bold fs-6">@Model.Email</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Phone -->
+                            <div class="detail-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="fas fa-phone text-primary-color fs-4"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1 text-muted">Phone Number</h6>
+                                        <p class="mb-0 fw-bold fs-6">@Model.Phone</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Date of Birth -->
+                            <div class="detail-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="fas fa-calendar-alt text-primary-color fs-4"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1 text-muted">Date of Birth</h6>
+                                        <p class="mb-0 fw-bold fs-6">@Model.DateOfBirth</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="detail-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="fas @(Model.Gender == "Male" ? "fa-mars" : "fa-venus") text-primary-color fs-4"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1 text-muted">Gender</h6>
+                                        <p class="mb-0 fw-bold fs-6">@Model.Gender</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="detail-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="fas fa-map-marker-alt text-primary-color fs-4"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1 text-muted">Address</h6>
+                                        <p class="mb-0 fw-bold fs-6">@Model.Address</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Specialty -->
+                            <div class="detail-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="icon-box me-3">
+                                        <i class="fas fa-dumbbell text-primary-color fs-4"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1 text-muted">Specialization</h6>
+                                        <p class="mb-0 fw-bold fs-6">@Model.Specialties</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="buttons-container d-flex justify-content-between gap-3 mt-5 pt-4 border-top">
+                            <a asp-controller="Trainer" asp-action="Index" class="btn-outline-custom">
+                                <i class="fas fa-arrow-left me-2"></i>Back to List
+                            </a>
+                            <div class="d-flex gap-2">
+                                <a asp-controller="Trainer" asp-action="Edit" asp-route-id="@Model.Id" class="btn-outline-custom">
+                                    <i class="fas fa-edit me-2"></i>Edit Profile
+                                </a>
+                                <a asp-controller="Session" asp-action="Index" asp-route-trainerId="@Model.Id" class="btn-fill">
+                                    <i class="fas fa-calendar me-2"></i>View Sessions
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // تأثيرات ظهور للعناصر
+            const detailItems = document.querySelectorAll('.detail-item');
+            detailItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, index * 100);
+            });
+
+            // تأثيرات للإحصائيات
+            const statsNumbers = document.querySelectorAll('.stats-number');
+            statsNumbers.forEach(stat => {
+                const target = parseInt(stat.textContent);
+                if (!isNaN(target)) {
+                    animateCounter(stat, 0, target, 2000);
+                }
+            });
+
+            // Auto-hide alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.transition = "opacity 0.5s ease";
+                    alert.style.opacity = "0";
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.remove();
+                        }
+                    }, 500);
+                }, 5000);
+            });
+
+            // دالة لعد الأرقام
+            function animateCounter(element, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const value = Math.floor(progress * (end - start) + start);
+                    element.textContent = value;
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            // تأثير للبطاقة الرئيسية
+            const card = document.querySelector('.card');
+            if (card) {
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>
